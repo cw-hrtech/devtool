@@ -13,7 +13,5 @@ services:
   kibana:
     build:
       context: ./kibana
-    environment:
-      SERVER_NAME:${CLIENT_IP}
     ports:
       - "5601:5601"
