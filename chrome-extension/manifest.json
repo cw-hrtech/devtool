@@ -1,0 +1,30 @@
+{
+    "manifest_version": 2,
+    "name": "Vitop",
+    "version": "0.1",
+    "icons": {
+        "16": "icon16.png",
+        "48": "icon48.png",
+        "128": "icon128.png"
+    },
+    "permissions": [
+        "tabs",
+        "<all_urls>",
+        "storage"
+    ],
+    "content_scripts": [
+        {
+            "matches": [
+                "<all_urls>"
+            ],
+            "js": [
+                "jquery-3.4.1.min.js"
+            ]
+        }
+    ],
+    "browser_action": {
+        "default_popup": "popup.html",
+        "default_icon": "icon16.png"
+    },
+    "options_page": "options.html"
+}
