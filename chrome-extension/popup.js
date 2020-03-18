@@ -5,17 +5,14 @@ function execJS() {
     });
 }
 
-var developName = '';
-
-function loadDevelopName() {
-    // Use default value color = 'red' and likesColor = true.
+function loadConfig() {
+    console.log('---> loadConfig')
     chrome.storage.sync.get({
-        developer: '',
+        start: '',
+        end: '',
     }, function (items) {
-        if (items['developer'].length > 0) {
-            developName = items['developer'];
-            $('#develop-name').html(items['developer'])
-        }
+        $('#start_id').html(items['start']);
+        $('#end_id').html(items['end']);
     });
 }
 
@@ -37,7 +34,7 @@ function copyTableData() {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-    loadDevelopName();
+    loadConfig();
     document.getElementById('btn-copy').addEventListener('click', copyTableData);
     document.getElementById('load-data').addEventListener('click', execJS);
 
@@ -46,6 +43,8 @@ document.addEventListener('DOMContentLoaded', function () {
             if (request.msg === "completed") {
                 let html = '';
                 let fileOnly = $('#file-only').prop('checked');
+                let developName = request.data.developerName;
+                let mergeId = request.data.mergeId;
                 request.data.files.forEach(function (item, index) {
                     if (fileOnly) {
                         html += `<tr>
@@ -53,6 +52,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             </tr>`;
                     } else {
                         html += `<tr>
+                                <td>${mergeId}</td>
                                 <td style="width: 50px" class="font-weight-bold text-center ${item['tdClass']}">${item['status']}</td>
                                 <td>${item['path']}</td>
                                 <td style="width: 150px">${developName}</td>
@@ -60,8 +60,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
                 });
                 $('#table-wrapper').removeClass('d-none');
-                $('#table-result table').html(html);
-                $.notify(`Có ${request.data.files.length} files thay đổi`, "success");
+                $('#table-result table').append(html);
+                $.notify(`Merge: ${mergeId} có ${request.data.files.length} files thay đổi`, "success");
                 $('#btn-copy').removeClass('d-none');
             }
             $('.spinner-border').addClass('d-none');

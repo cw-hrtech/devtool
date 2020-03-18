@@ -19,14 +19,24 @@
 </head>
 <body>
 <form>
-    <div class="container">
-        <div class="form-group">
-            <label>Tên của bạn</label>
-            <input id="name" class="form-control">
-            <small class="form-text text-muted">Nhập tên của bạn: VD: ManNV</small>
-            <small class="form-text text-success font-weight-bold d-none">Tên của bạn đã được lưu lại</small>
-
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-6">
+                <div class="form-group">
+                    <label>Merge ID start</label>
+                    <input id="start" class="form-control">
+                    <small class="form-text text-muted">Vui lòng nhập ID của merge request</small>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group">
+                    <label>Merge ID end</label>
+                    <input id="end" class="form-control">
+                    <small class="form-text text-muted">Vui lòng nhập ID của merge request</small>
+                </div>
+            </div>
         </div>
+
         <button type="button" id="save-option" class="btn btn-primary">Submit</button>
     </div>
 </form>

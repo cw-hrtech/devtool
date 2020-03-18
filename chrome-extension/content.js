@@ -1,22 +1,41 @@
-if (document.location.origin === 'https://gitlab002.co-well.jp') {
-    let pathArr = document.location.pathname.split('/');
-    if (pathArr.length < 5) {
-        alert('Extension chỉ chạy được ở trang merge requests, VD: https://gitlab002.co-well.jp/willandway/historia/merge_requests/1134/diffs')
-    } else {
-        let mergeId = pathArr[4];
-        $.ajax({
-            type: 'GET',
-            url: `https://gitlab002.co-well.jp/willandway/historia/merge_requests/${mergeId}/diffs.json`,
-            success: function (data) {
-                detechFileChange(data['diff_files']);
-            }
-        })
-    }
-} else {
+if (document.location.origin !== 'https://gitlab002.co-well.jp') {
     alert('Extension chỉ chạy được trên trang https://gitlab002.co-well.jp/')
+} else {
+    var startId = 0;
+    var endId = 0;
+    chrome.storage.sync.get({
+        start: '',
+        end: '',
+    }, async function (items) {
+        startId = parseInt(items['start'])
+        endId = parseInt(items['end'])
+        let mergeId = 0;
+        for (mergeId = startId; mergeId <= endId; mergeId++) {
+            let urlFileChange = `https://gitlab002.co-well.jp/willandway/historia/merge_requests/${mergeId}/diffs.json`
+            let urlInfo = `https://gitlab002.co-well.jp/willandway/historia/merge_requests/${mergeId}.json?serializer=sidebar_extras`;
+            let mID = mergeId
+            await $.ajax({
+                type: 'GET',
+                url: urlInfo,
+                success: async function (data) {
+                    let participants = data['participants'];
+                    let userRequestMerge = participants[participants.length - 1];
+                    let developerName = userRequestMerge['name'];
+                    await $.ajax({
+                        type: 'GET',
+                        url: urlFileChange,
+                        success: function (data) {
+                            detechFileChange(data['diff_files'], developerName, mID);
+                        }
+                    })
+                }
+            })
+
+        }
+    });
 }
 
-function detechFileChange(data) {
+function detechFileChange(data, developerName, mergeId) {
     let filesChange = [];
     data.forEach(function (item) {
         let status = 'New file';
@@ -40,14 +59,16 @@ function detechFileChange(data) {
         }
         filesChange.push(file)
     })
-    sendToPopup(filesChange);
+    sendToPopup(filesChange, developerName, mergeId);
 }
 
-function sendToPopup(files) {
+function sendToPopup(files, developerName, mergeId) {
     chrome.runtime.sendMessage({
         msg: "completed",
         data: {
-            files: files
+            files: files,
+            developerName: developerName,
+            mergeId: mergeId
         }
     });
 }

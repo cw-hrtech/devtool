@@ -5,7 +5,7 @@ services:
     image: phpmyadmin/phpmyadmin
     environment:
       - PMA_ARBITRARY=1
-      - PMA_HOSTS=172.16.160.124,172.16.160.6,13.228.21.41,13.229.228.59
+      - PMA_HOSTS=127.0.0.1,172.16.160.124,172.16.160.6,13.228.21.41,1.55.215.8
     ports:
       - "${PHPMYADMIN_PORT}:80"
     volumes:

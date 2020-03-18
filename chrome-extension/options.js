@@ -1,31 +1,21 @@
 function saveOptions() {
-    let name = $('#name').val().trim();
-    if (name.length == 0) {
-        alert('Vui lòng nhập tên của bạn');
-        return;
-    }
-
-    //check name have space
-    let arr = name.split(' ');
-    if (arr.length > 1) {
-        alert('Tên không có dấu cách');
-        return;
-    }
-
+    let start = $('#start').val().trim();
+    let end = $('#end').val().trim();
     chrome.storage.sync.set({
-        developer: name
+        start, end
     }, function () {
-        $('.text-success').removeClass('d-none')
+        // $('.text-success').removeClass('d-none')
     });
 }
 
 function restoreOptions() {
     // Use default value color = 'red' and likesColor = true.
     chrome.storage.sync.get({
-        developer: '',
+        start: 0,
+        end: 0,
     }, function (items) {
-        console.log('items', items)
-        $('#name').val(items['developer'])
+        $('#start').val(items['start'])
+        $('#end').val(items['end'])
     });
 }
 
