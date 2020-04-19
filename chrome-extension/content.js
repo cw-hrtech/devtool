@@ -11,26 +11,37 @@ if (document.location.origin !== 'https://gitlab002.co-well.jp') {
         endId = parseInt(items['end'])
         let mergeId = 0;
         for (mergeId = startId; mergeId <= endId; mergeId++) {
+            let checkStatus = `https://gitlab002.co-well.jp/willandway/historia/merge_requests/${mergeId}.json?serializer=widget`;
             let urlFileChange = `https://gitlab002.co-well.jp/willandway/historia/merge_requests/${mergeId}/diffs.json`
             let urlInfo = `https://gitlab002.co-well.jp/willandway/historia/merge_requests/${mergeId}.json?serializer=sidebar_extras`;
             let mID = mergeId
+
             await $.ajax({
                 type: 'GET',
-                url: urlInfo,
+                url: checkStatus,
                 success: async function (data) {
-                    let participants = data['participants'];
-                    let userRequestMerge = participants[participants.length - 1];
-                    let developerName = userRequestMerge['name'];
-                    await $.ajax({
-                        type: 'GET',
-                        url: urlFileChange,
-                        success: function (data) {
-                            detechFileChange(data['diff_files'], developerName, mID);
-                        }
-                    })
+                    if (data['state'] == 'merged') {
+                        await $.ajax({
+                            type: 'GET',
+                            url: urlInfo,
+                            success: async function (data) {
+                                let participants = data['participants'];
+                                let userRequestMerge = participants[participants.length - 1];
+                                let developerName = userRequestMerge['name'];
+                                await $.ajax({
+                                    type: 'GET',
+                                    url: urlFileChange,
+                                    success: function (data) {
+                                        if (data['target_branch_name'] != 'develop') {
+                                            detechFileChange(data['diff_files'], developerName, mID);
+                                        }
+                                    }
+                                })
+                            }
+                        })
+                    }
                 }
             })
-
         }
     });
 }
