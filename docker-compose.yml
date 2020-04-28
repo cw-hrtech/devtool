@@ -25,3 +25,7 @@ services:
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro
       - ./proxy/certs:/etc/nginx/certs
+  jenkins:
+    image: jenkins
+    ports:
+      - "8081:8080"
