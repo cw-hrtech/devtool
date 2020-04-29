@@ -25,6 +25,7 @@ services:
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro
       - ./proxy/certs:/etc/nginx/certs
+      - ./proxy/upload.conf:/etc/nginx/conf.d/upload.conf
   jenkins:
     image: jenkins
     ports:
