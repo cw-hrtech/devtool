@@ -5,7 +5,7 @@ services:
     image: phpmyadmin/phpmyadmin
     environment:
       - PMA_ARBITRARY=1
-      - PMA_HOSTS=192.168.1.159 ,172.16.160.124,172.16.160.6,13.228.21.41,1.55.215.8
+      - PMA_HOSTS=172.16.160.124
     ports:
       - "${PHPMYADMIN_PORT}:80"
     volumes:
@@ -26,7 +26,3 @@ services:
       - /var/run/docker.sock:/tmp/docker.sock:ro
       - ./proxy/certs:/etc/nginx/certs
       - ./proxy/upload.conf:/etc/nginx/conf.d/upload.conf
-  jenkins:
-    image: jenkins
-    ports:
-      - "8081:8080"
