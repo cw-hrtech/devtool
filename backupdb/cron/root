@@ -1,2 +1,0 @@
-# At 00:00.
-0 0 * * * /etc/periodic/daily/backup.sh
